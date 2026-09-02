@@ -1,21 +1,19 @@
-Jangow: 1.0.1 — VulnHub
+## Jangow: 1.0.1 — VulnHub
 
-Date: 8/31
-Difficulty: Easy Initial access level: None — given only an IP address on a login screen, no credentials or shell access<img width="704" height="595" alt="buscar" src="https://github.com/user-attachments/assets/cf3eccc6-11d1-44c3-9dfe-87b185453cc4" />
-<img width="786" height="637" alt="flag" src="https://github.com/user-attachments/assets/1746c7bc-1423-4808-9c46-e0fee7cfc850" />
+**Date: 8/31** <br>
+**Difficulty:** Easy Initial access level: None — given only an IP address on a login screen, no credentials or shell access <br>
+**Objective:** Find the flag(s) on the box. The author's own hint for this machine: "the secret to this box is enumeration." <br> 
 
-Objective: Find the flag(s) on the box. The author's own hint for this machine: "the secret to this box is enumeration."
-
-Enumeration
+## Enumeration
 
 Ran nmap against the target IP to identify open ports and running services:
 
+```
 PORT   STATE SERVICE VERSION
 21/tcp open  ftp     vsftpd 3.0.3
 80/tcp open  http    Apache httpd 2.4.18
 |_http-server-header: Apache/2.4.18 (Ubuntu)
-
-Two open ports: FTP (21) and HTTP (80), both with version banners grabbed directly from the scan. OS identified as Ubuntu via the Apache banner.
+```
 
 ## Initial Foothold
 Started with port 80 since it was the more approachable service — navigated to the IP in a browser and found a standard website. Browsing didn't turn up much until a tab labeled "Buscar" (Spanish for "to search/look") stood out. Checking the URL showed it was a PHP page: `busque.php?buscar=`, which suggested the parameter might be passed straight into a command rather than sanitized.
@@ -56,3 +54,16 @@ STEPS:
 - FTP client — file transfer and clean filesystem access
 -  Dirty COW exploit (CVE-2016-5195) — privilege escalation
 - `gcc` — compiling the Dirty COW exploit source
+
+## Images
+
+<p align="center">
+  <img width="704" height="595" alt="buscar" src="https://github.com/user-attachments/assets/cf3eccc6-11d1-44c3-9dfe-87b185453cc4" /><br>
+  <sub><b>Command injection confirmed via busque.php</b></sub>
+</p>
+
+<p align="center">
+  <img width="786" height="637" alt="flag" src="https://github.com/user-attachments/assets/1746c7bc-1423-4808-9c46-e0fee7cfc850" />><br>
+  <sub><b>Root access confirmed, flag captured</b></sub>
+</p>
+
