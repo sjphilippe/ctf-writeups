@@ -18,13 +18,13 @@ PORT   STATE SERVICE VERSION
 ## Initial Foothold
 I started with port 80 and navigated to the IP in a browser and found a standard website. Browsing didn't turn up much until a tab labeled "Buscar" (Spanish for "to search/look") stood out. Checking the URL showed it was a PHP page: `busque.php?buscar=`, which suggested the parameter might be passed straight into a command rather than sanitized.
 
-I tested the `buscar` parameter with  `echo` to confirm the input was being processed by the page. Once that confirmed the parameter was live, tested a Linux command (`ls -lha /`) and got a filesystem output back — confirming this was an actual OS command injection.  I continued using bash commands to explore filesystem, but was limited to `www-data`'s permissions. 
+I tested the `buscar` parameter with  `echo` to confirm the input was being processed by the page. Once that confirmed the parameter was live, tested a Linux command (`ls -lha /`) and got a filesystem output back — confirming this was an actual OS command injection.  I continued using bash commands to explore filesystem, but was limited to `www-data`'s permissions. I was able to find a hash in user.txt under `/home/jangow01/` (**flag 1**).
 
 I tried `sudo -l` to increase my access as www-data, but it didn't work. 
 
 ## Privilege Escalation
 
-Eventually I found login credentials in `config.php` on the web server (**flag 1**). Used those creds to log into the machine directly, though the shell was limited/buggy (backslash, quotes, and other special characters didn't work correctly). Used the same credentials over FTP instead, which gave clean access to the full filesystem structure without the shell quirks.
+Eventually I found login credentials in `config.php` on the web server. I used those creds to log into the machine directly, though the shell was limited/buggy (backslash, quotes, and other special characters didn't work correctly). Used the same credentials over FTP instead, which gave clean access to the full filesystem structure without the shell quirks.
 
 Still only had standard user-level access at this point. I checked the kernel version and searched for known privilege escalation exploits matching that kernel. I decided to use Dirty COW (CVE-2016-5195) since I had limited read/write access and I wanted to dig deeper into the filesystem. Dirty COW exploits a timing gap in how linux handles copy-on-write memory which allows a low privileged user to write files they should only be to read (like those under root).
 
@@ -38,7 +38,7 @@ STEPS:
 - Landed root, navigated to `/root/proof.txt` and got the flag!
 
 ## Flags
-- Flag 1 (creds): found in `config.php` on the web server
+- Flag 1 (user): hash found in `user.txt` at `/home/jangow01/`
 - Flag 2 (root): `/root/proof.txt`
 
 ## Defensive Takeaway
