@@ -16,7 +16,7 @@ PORT   STATE SERVICE VERSION
 ```
 
 ## Initial Foothold
-Started with port 80 since it was the more approachable service — navigated to the IP in a browser and found a standard website. Browsing didn't turn up much until a tab labeled "Buscar" (Spanish for "to search/look") stood out. Checking the URL showed it was a PHP page: `busque.php?buscar=`, which suggested the parameter might be passed straight into a command rather than sanitized.
+I started with port 80 and navigated to the IP in a browser and found a standard website. Browsing didn't turn up much until a tab labeled "Buscar" (Spanish for "to search/look") stood out. Checking the URL showed it was a PHP page: `busque.php?buscar=`, which suggested the parameter might be passed straight into a command rather than sanitized.
 
 I tested the `buscar` parameter with  `echo` to confirm the input was being processed by the page. Once that confirmed the parameter was live, tested a Linux command (`ls -lha /`) and got a filesystem output back — confirming this was an actual OS command injection.  I continued using bash commands to explore filesystem, but was limited to `www-data`'s permissions. 
 
@@ -58,12 +58,12 @@ STEPS:
 ## Images
 
 <p align="center">
-  <img width="704" height="595" alt="buscar" src="https://github.com/user-attachments/assets/cf3eccc6-11d1-44c3-9dfe-87b185453cc4" /><br>
+  <img src="./images/buscar.PNG" width="500"><br>
   <sub><b>Command injection confirmed via busque.php</b></sub>
 </p>
 
 <p align="center">
-  <img width="786" height="637" alt="flag" src="https://github.com/user-attachments/assets/1746c7bc-1423-4808-9c46-e0fee7cfc850" />><br>
+  <img src="./images/flag.PNG" width="500"><br>
   <sub><b>Root access confirmed, flag captured</b></sub>
 </p>
 
